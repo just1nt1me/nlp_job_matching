@@ -1,3 +1,4 @@
 *.csv
 *.Identifier
 __pycache__
+*.gz

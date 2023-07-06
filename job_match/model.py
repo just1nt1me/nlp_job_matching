@@ -11,7 +11,7 @@ import tensorflow as tf
 import tensorflow_hub as hub
 
 def load_model():
-    model_filename = 'universal_sentence_encoder'
+    model_filename = 'universal-sentence-encoder_4.tar.gz'
     try:
         # Try to load the model from a saved file
         model = tf.keras.models.load_model(model_filename)
