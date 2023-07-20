@@ -22,25 +22,29 @@ def get_clean_text(text):
 def parse_resume(input):
     reader = PdfReader(input)
     number_of_pages = len(reader.pages)
-    resume = ""
+    resume_parts = []
 
     for page_number in range(number_of_pages):
         page = reader.pages[page_number]
         text = page.extract_text()
         clean_text = get_clean_text(text)
-        resume += clean_text
+        if clean_text:
+            resume_parts.append(clean_text)
 
+    resume = ' '.join(resume_parts)
     return resume
 
 def parse_jobl(input):
     reader = PdfReader(input)
     number_of_pages = len(reader.pages)
-    jobl = ""
+    jobl_parts = []
 
     for page_number in range(number_of_pages):
         page = reader.pages[page_number]
         text = page.extract_text()
         clean_text = get_clean_text(text)
-        jobl += clean_text
+        if clean_text:
+            jobl_parts.append(clean_text)
 
+    jobl = ' '.join(jobl_parts)
     return jobl

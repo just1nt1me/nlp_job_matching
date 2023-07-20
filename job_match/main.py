@@ -22,7 +22,7 @@ import tensorflow_hub as hub
 
 # import modules
 from parser import parse_jobl, parse_resume
-from model import embed
+from model import load_model, embed
 
 def main(job_listing_file, resume_file):
     # Check file extensions
@@ -36,14 +36,18 @@ def main(job_listing_file, resume_file):
     resume = parse_resume(resume_file)
 
     # 2. Make dataframe and add jobl and resume
-    df = pd.DataFrame([
-        {'Job Listing': jobl},
-        {'Resume': resume}
-    ])
+    df = pd.DataFrame({
+        'Job Listing': [jobl],
+        'Resume': [resume]
+    })
 
     # 2. Load model and make embeddings
-    df['Job Embedding'] = embed(jobl).numpy()[0]
-    df['Resume Embedding'] = embed(resume).numpy()[0]
+    model = load_model()
+    job_embedding = embed(model, jobl)
+    resume_embedding = embed(model, resume)
+
+    df['Job Embedding'] = [job_embedding.numpy().tolist()]
+    df['Resume Embedding'] = [resume_embedding.numpy().tolist()]
 
     # 3. Get Similarity Score
     df['Similarity Score'] = 1 - spatial.distance.cosine(df['Job Embedding'][0], df['Resume Embedding'][0])
@@ -51,4 +55,4 @@ def main(job_listing_file, resume_file):
     print(df)
 
 if __name__=='__main__':
-    main('files/nova_jl.pdf', 'files/resume.pdf')
+    main('../files/nova_jl.pdf', '../files/resume.pdf')
