@@ -2,14 +2,8 @@ import tensorflow as tf
 import tensorflow_hub as hub
 import tarfile
 
-# def load_model():
-#     module_url = "https://tfhub.dev/google/universal-sentence-encoder/4"
-#     model = hub.load(module_url)
-#     print ("module %s loaded" % module_url)
-#     return model
-
 def extract_model():
-    with tarfile.open("/universal-sentence-encoder_4.tar.gz", "r") as tf:
+    with tarfile.open("./universal-sentence-encoder_4.tar.gz", "r") as tf:
         print("Opened tarfile")
         tf.extractall(path="./extraction_dir")
         print("All files extracted")
@@ -34,3 +28,6 @@ def embed(model, input):
     text_list = [input]
     embedding = model(text_list)
     return embedding
+
+if __name__=='__main__':
+    extract_model()
