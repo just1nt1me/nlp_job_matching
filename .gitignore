@@ -3,3 +3,5 @@
 __pycache__
 *.gz
 extraction_dir/
+files/
+*.pdf

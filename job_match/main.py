@@ -14,7 +14,7 @@ import string
 from nltk.stem.porter import PorterStemmer
 import re
 
-# similarity score
+# similarity score and transfer learning
 from scipy import spatial
 from absl import logging
 import tensorflow as tf
@@ -24,35 +24,56 @@ import tensorflow_hub as hub
 from parser import parse_jobl, parse_resume
 from model import load_model, embed
 
-def main(job_listing_file, resume_file):
+def main(job_listing_file, resume_files):
     # Check file extensions
     if not job_listing_file.endswith('.pdf'):
         raise ValueError("Job listing should be in PDF format")
-    if not resume_file.endswith('.pdf'):
-        raise ValueError("Resume should be in PDF format")
 
-    # 1. Load and parse job listings and resumes
+    for resume_file in resume_files:
+        if not resume_file.endswith('.pdf'):
+            raise ValueError(f"{resume_file} should be in PDF format")
+
+    # 1. Load and parse job listing
     jobl = parse_jobl(job_listing_file)
-    resume = parse_resume(resume_file)
+    print("Job listing parsed contents:")
+    # print("*"*20)
+    # print(jobl)
 
-    # 2. Make dataframe and add jobl and resume
-    df = pd.DataFrame({
-        'Job Listing': [jobl],
-        'Resume': [resume]
-    })
-
-    # 2. Load model and make embeddings
+    # 2. Load model and create the job embedding
     model = load_model()
     job_embedding = embed(model, jobl)
-    resume_embedding = embed(model, resume)
 
-    df['Job Embedding'] = [job_embedding.numpy().tolist()]
-    df['Resume Embedding'] = [resume_embedding.numpy().tolist()]
+    # Create a list to store the results
+    results = []
 
-    # 3. Get Similarity Score
-    df['Similarity Score'] = 1 - spatial.distance.cosine(df['Job Embedding'][0], df['Resume Embedding'][0])
+    for resume_file in resume_files:
+        # 3. Load and parse resume
+        resume = parse_resume(resume_file)
+        print("Resume parsed contents:")
+        # print("*"*20)
+        # print(resume)
+
+        # 4. Create the resume embedding
+        resume_embedding = embed(model, resume)
+
+        # 5. Calculate Similarity Score
+        similarity_score = 1 - spatial.distance.cosine(job_embedding, resume_embedding)
+
+        # Append the result to the list
+        results.append({
+            'Resume': resume,
+            'Job Listing': jobl,
+            'Similarity Score': similarity_score
+        })
+
+    # Create a DataFrame from the results list
+    df = pd.DataFrame(results).sort_values(by='Similarity Score', ascending=False)
 
     print(df)
 
-if __name__=='__main__':
-    main('../files/nova_jl.pdf', '../files/resume.pdf')
+if __name__ == '__main__':
+    # job_listing_file = '../files/CTW Data Scientist.pdf'
+    # job_listing_file = '../files/nova_jl.pdf'
+    job_listing_file = '../files/PayPay _software_dev_engineer.pdf'
+    resume_files = ['../files/resume.pdf', '../files/jack_merret_resume.pdf', '../files/jon_nogueira_resume.pdf', '../files/jon_nog_jap_resume.pdf']
+    main(job_listing_file, resume_files)
