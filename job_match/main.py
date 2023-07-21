@@ -35,7 +35,7 @@ def main(job_listing_file, resume_files):
 
     # 1. Load and parse job listing
     jobl = parse_jobl(job_listing_file)
-    print("Job listing parsed contents:")
+    print("Job Listing PDF contents parsed")
     # print("*"*20)
     # print(jobl)
 
@@ -49,7 +49,7 @@ def main(job_listing_file, resume_files):
     for resume_file in resume_files:
         # 3. Load and parse resume
         resume = parse_resume(resume_file)
-        print("Resume parsed contents:")
+        print("Resume PDF contents parsed")
         # print("*"*20)
         # print(resume)
 
