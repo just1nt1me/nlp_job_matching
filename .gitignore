@@ -2,4 +2,4 @@
 *.Identifier
 __pycache__
 *.gz
-/extraction_dir
+extraction_dir/
