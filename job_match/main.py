@@ -71,9 +71,18 @@ def main(job_listing_file, resume_files):
 
     print(df)
 
+    # # Create word cloud for the job listing
+    # job_listing_text = ' '.join(df['Job Listing'])
+    # create_word_cloud_with_colors(job_listing_text, color_function, 'job_listing_wordcloud.png')
+
+    # # Create word clouds for each resume
+    # for index, resume_text in enumerate(df['Resume']):
+    #     resume_filename = f'resume_wordcloud_{index}.png'
+    #     create_word_cloud_with_colors(resume_text, color_function, resume_filename)
+
 if __name__ == '__main__':
-    # job_listing_file = '../files/CTW Data Scientist.pdf'
+    job_listing_file = '../files/CTW Data Scientist.pdf'
     # job_listing_file = '../files/nova_jl.pdf'
-    job_listing_file = '../files/PayPay _software_dev_engineer.pdf'
-    resume_files = ['../files/resume.pdf', '../files/jack_merret_resume.pdf', '../files/jon_nogueira_resume.pdf', '../files/jon_nog_jap_resume.pdf']
+    # job_listing_file = '../files/PayPay _software_dev_engineer.pdf'
+    resume_files = ['../files/resume.pdf', '../files/jack_merret_resume.pdf', '../files/cc.resume.pdf', '../files/jon_nogueira_resume.pdf', '../files/jon_nog_jap_resume.pdf']
     main(job_listing_file, resume_files)
